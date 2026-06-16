@@ -25,7 +25,8 @@ const patientSchema = new mongoose.Schema({
     default: 'waiting',
   },
   consultationType: {
-    type: Number,
+    type: String,
+    enum: ['general', 'dental', 'cardiology', 'orthopedic'],
     default: 'general',
   },
   estimatedWait: {
