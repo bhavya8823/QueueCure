@@ -2,7 +2,6 @@
 
 import { NowServingCard } from '@/components/waiting-room/now-serving-card'
 import { UpcomingQueue } from '@/components/waiting-room/upcoming-queue'
-import { WaitingRoomStats } from '@/components/waiting-room/waiting-room-stats'
 import { AnnouncementTicker } from '@/components/waiting-room/announcement-ticker'
 import { useState } from 'react'
 
@@ -65,11 +64,6 @@ export default function WaitingRoomPage() {
               room="Room 3"
             />
 
-            <WaitingRoomStats
-              totalWaiting={upcomingPatients.length}
-              avgWaitTime="15 min"
-              totalServed={12}
-            />
 
             <AnnouncementTicker announcements={announcements} />
           </div>

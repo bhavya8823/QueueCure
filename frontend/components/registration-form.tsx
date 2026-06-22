@@ -83,7 +83,7 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            placeholder="+1 (555) 123-4567"
+            placeholder="Enter phone number"
             className="mt-1 w-full rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground placeholder-muted-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             required
           />
@@ -121,12 +121,10 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
             onChange={handleChange}
             className="mt-1 w-full rounded-md border border-input bg-card px-3 py-2 text-sm text-foreground transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           >
-            <option>General Checkup</option>
+            <option>General</option>
             <option>Dental</option>
-            <option>Eye Care</option>
-            <option>Vaccination</option>
-            <option>Follow-up</option>
-            <option>Lab Tests</option>
+            <option>Cardiology</option>
+            <option>Orthopedic</option>
           </select>
         </div>
 
