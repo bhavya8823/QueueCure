@@ -17,6 +17,14 @@ export const useCallNextPatient = () => {
       queryClient.invalidateQueries({
         queryKey: ["queue-stats"],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["current-patient"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["waiting-patients"],
+      });
     },
   });
 };

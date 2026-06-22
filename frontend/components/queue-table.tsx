@@ -156,13 +156,9 @@ export function QueueTable({
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
                         {patient.status === "waiting" && (
-                          <Button
-                            size="sm"
-                            onClick={() => onCallPatient(patient._id)}
-                            className="bg-primary text-primary-foreground hover:bg-primary/90"
-                          >
-                            Call
-                          </Button>
+                          <span className="text-xs text-muted-foreground">
+                            Waiting
+                          </span>
                         )}
                         {patient.status === "called" && (
                           <Button
