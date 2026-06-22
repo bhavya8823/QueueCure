@@ -12,6 +12,7 @@ import { useCompletePatient } from "@/hooks/useCompletePatient";
 import { useCreatePatient } from "@/hooks/useCreatePatient";
 import { useCallNextPatient } from "@/hooks/useCallNextPatient";
 
+
 export default function Home() {
   const { data: patients = [] } = usePatients();
   console.log("Patients:", patients);
