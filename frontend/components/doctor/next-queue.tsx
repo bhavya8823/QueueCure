@@ -3,10 +3,10 @@
 import { Clock, Users } from 'lucide-react'
 
 interface Patient {
-  id: string
-  token: string
-  name: string
-  consultationType: string
+  _id: string;
+  token: string;
+  name: string;
+  consultationType: string;
 }
 
 interface NextQueueProps {
@@ -28,7 +28,7 @@ export function NextQueue({ patients }: NextQueueProps) {
 
       <div className="space-y-2">
         {upcomingPatients.map((patient, index) => (
-          <div key={patient.id} className="flex items-center gap-3 rounded-lg border border-border/50 bg-secondary/20 p-3 transition-colors hover:bg-secondary/40">
+          <div key={patient._id} className="flex items-center gap-3 rounded-lg border border-border/50 bg-secondary/20 p-3 transition-colors hover:bg-secondary/40">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-xs font-semibold text-primary">
               {index + 1}
             </div>

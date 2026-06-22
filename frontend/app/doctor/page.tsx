@@ -5,6 +5,7 @@ import { CurrentPatientCard } from '@/components/doctor/current-patient-card'
 import { NextQueue } from '@/components/doctor/next-queue'
 import { useCurrentPatient } from "@/hooks/useCurrentPatient";
 import { useWaitingPatients } from "@/hooks/useWaitingPatients";
+import { useCompletePatient } from "@/hooks/useCompletePatient";
 
 interface Patient {
   id: string
@@ -22,6 +23,8 @@ export default function DoctorPage() {
   const { data: currentPatient } = useCurrentPatient();
 
   const { data: upcomingPatients = [] } = useWaitingPatients();
+
+  const completeMutation = useCompletePatient();
 
   if (!currentPatient) {
     return (
@@ -50,7 +53,7 @@ export default function DoctorPage() {
               name={currentPatient.name}
               age={currentPatient.age}
               consultationType={currentPatient.consultationType}
-              onComplete={() => {}}
+              onComplete={() => completeMutation.mutate(currentPatient._id)}
             />
           </div>
 
