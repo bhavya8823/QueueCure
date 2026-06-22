@@ -57,20 +57,8 @@ export function CurrentPatientCard({
         </div>
 
         <div className="flex gap-3 border-t border-primary/10 pt-6">
-          <Button variant="outline" className="flex-1 gap-2">
-            <Phone className="h-4 w-4" />
-            Call
-          </Button>
-          <Button variant="outline" className="flex-1 gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Message
-          </Button>
-          <Button
-            onClick={onComplete}
-            className="flex-1 gap-2 bg-green-600 hover:bg-green-700"
-          >
-            <CheckCircle2 className="h-4 w-4" />
-            Complete
+          <Button variant="outline" className="text-white flex-1 gap-2  bg-green-600 hover:bg-green-700" >
+            Complete Consultation
           </Button>
         </div>
       </div>

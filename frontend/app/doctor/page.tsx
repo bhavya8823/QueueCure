@@ -2,9 +2,7 @@
 
 import { Header } from '@/components/header'
 import { CurrentPatientCard } from '@/components/doctor/current-patient-card'
-import { ConsultationNotes } from '@/components/doctor/consultation-notes'
 import { NextQueue } from '@/components/doctor/next-queue'
-import { PerformanceAnalytics } from '@/components/doctor/performance-analytics'
 import { useState } from 'react'
 
 interface Patient {
@@ -105,8 +103,6 @@ export default function DoctorPage() {
               consultationType={currentPatient.consultationType}
               onComplete={() => {}}
             />
-            <ConsultationNotes patientId={currentPatient.id} />
-            <PerformanceAnalytics />
           </div>
 
           {/* Right Column - Queue (30%) */}
