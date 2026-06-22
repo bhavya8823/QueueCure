@@ -1,4 +1,5 @@
 import Patient from '../models/Patient.js'; 
+import { CreatePatientDTO } from '../types/patient.types.js';
 
 const generateToken = async (): Promise<string> => {
 
@@ -15,12 +16,6 @@ const generateToken = async (): Promise<string> => {
     return `A${String(nextNumber).padStart(3, '0')}`;
 };
 
-interface CreatePatientDTO {
-    name: string;
-    phone: string;
-    age: number;
-    consultationType: string;
-}
 
 export const createPatientService = async (data: CreatePatientDTO) => {
     const token = await generateToken();
@@ -29,3 +24,23 @@ export const createPatientService = async (data: CreatePatientDTO) => {
         token });
     return patient;
 };
+
+export const getAllPatientsService = async () => {
+    const patients = await Patient.find().sort({ createdAt: 1 });
+    return patients;
+};
+
+export const getWaitingPatientsService = async () => {
+    const patients = await Patient.find({ status: 'waiting' }).sort({ createdAt: 1 });
+    return patients;
+}; 
+
+export const callPatientService = async (id: string) => {
+    const patient = await Patient.findByIdAndUpdate(id, { status: 'called' }, { new: true });
+    return patient;
+}; 
+
+export const completePatientService = async (id: string) => {
+    const patient = await Patient.findByIdAndUpdate(id, { status: 'completed' }, { new: true });
+    return patient;
+}; 

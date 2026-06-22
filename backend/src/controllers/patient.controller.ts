@@ -1,21 +1,49 @@
 import { Request, Response } from 'express';
-import { createPatientService } from '../services/patient.service.js';
+import { createPatientService, getAllPatientsService, getWaitingPatientsService, callPatientService, completePatientService } from '../services/patient.service.js';
+import asyncHandler from '../utils/asyncHandler.js';
+import ApiResponse from '../utils/ApiResponse.js';
 
-export const createPatient = async (req: Request, res: Response) => {
-    try {
-        const patient = await createPatientService(req.body);
-        res.status(201).json({
-            success: true,
-            patient,
-        });
-    } catch (error) {
+export const createPatient = asyncHandler(async (req, res) => {
+    const patient = await createPatientService(req.body);
 
-        console.log('======Error======');
-        console.error(error);
-        console.log('=================');
-        res.status(500).json({
-            success: false,
-            message: 'Unable to create patient',
-        });
-    }
-};
+    return res.status(201).json(
+        new ApiResponse('Patient created successfully', patient)
+    );
+}
+);
+
+export const getAllPatients = asyncHandler(async (req, res) => {
+    const patients = await getAllPatientsService();
+
+    return res.status(200).json(
+        new ApiResponse('Patients fetched successfully', patients)
+    );
+}
+);
+
+export const getWaitingPatients = asyncHandler(async (req, res) => {
+    const patients = await getWaitingPatientsService();
+
+    return res.status(200).json(
+        new ApiResponse('Waiting patients fetched successfully', patients)
+    );
+}
+);
+
+export const callPatient = asyncHandler(async (req, res) => {
+    const patient = await callPatientService(req.params.id as string);
+
+    return res.status(200).json(
+        new ApiResponse('Patient called successfully', patient)
+    );
+}
+);
+
+export const completePatient = asyncHandler(async (req, res) => {
+    const patient = await completePatientService(req.params.id as string);
+
+    return res.status(200).json(
+        new ApiResponse('Patient completed successfully', patient)
+    );
+}
+);
