@@ -11,6 +11,11 @@ export const callNextPatient = async () => {
   return response.data.data;
 };
 
+export const getCurrentPatient = async () => {
+  const response = await api.get("/queue/current");
+  return response.data.data;
+};
+
 export interface QueueStats {
   waiting: number;
   called: number;
