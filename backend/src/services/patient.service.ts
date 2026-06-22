@@ -41,6 +41,11 @@ export const callPatientService = async (id: string) => {
 }; 
 
 export const completePatientService = async (id: string) => {
-    const patient = await Patient.findByIdAndUpdate(id, { status: 'completed' }, { new: true });
-    return patient;
+  const patient = await Patient.findByIdAndUpdate(
+    id,
+    { status: "completed" },
+    { new: true },
+  );
+
+  return patient;
 }; 

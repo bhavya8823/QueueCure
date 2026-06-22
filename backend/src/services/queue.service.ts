@@ -1,16 +1,29 @@
 import Patient from "../models/Patient.js";
 
 export const callNextPatientService = async () => {
-    const patient = await Patient.findOne(
-        { status: 'waiting' },).sort({ createdAt: 1, });
-    if(!patient)
-    {
-        return null;
-    }
+  const existingCalled = await Patient.findOne({
+    status: "called",
+  });
 
-    patient.status = 'called';
-    await patient.save();
-    return patient;
+  if (existingCalled) {
+    return existingCalled;
+  }
+
+  const patient = await Patient.findOne({
+    status: "waiting",
+  }).sort({
+    createdAt: 1,
+  });
+
+  if (!patient) {
+    return null;
+  }
+
+  patient.status = "called";
+
+  await patient.save();
+
+  return patient;
 };
 
 export const getCurrentPatientService = async () => {

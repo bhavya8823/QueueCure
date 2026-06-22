@@ -3,6 +3,7 @@ import cors from 'cors';
 import patientRoutes from './routes/patient.routes.js';
 import queueRoutes from './routes/queue.routes.js';
 import errorHandler from './middleware/error.middleware.js';
+import settingsRoutes from "./routes/settings.routes.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/patients', patientRoutes);
 app.use('/api/queue', queueRoutes);
+app.use("/api/settings", settingsRoutes);
 
 // Test Routes
 app.get('/', (req, res) => {
