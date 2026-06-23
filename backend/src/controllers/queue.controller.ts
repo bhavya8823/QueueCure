@@ -3,6 +3,7 @@ import { callNextPatientService, getCurrentPatientService, getQueueStatsService 
 import asyncHandler from '../utils/asyncHandler.js';
 import ApiResponse from '../utils/ApiResponse.js';
 import ApiError from '../utils/ApiError.js';
+import { io } from "../server.js";
 
 export const callNextPatient = asyncHandler(async (req: Request, res: Response) => {
     const patient = await callNextPatientService();
@@ -10,6 +11,8 @@ export const callNextPatient = asyncHandler(async (req: Request, res: Response) 
     if (!patient) {
         throw new ApiError(404, 'No waiting patients found');
     }
+
+    io.emit("queue-updated");
 
     return res.status(200).json(
         new ApiResponse('Next patient called successfully', patient)

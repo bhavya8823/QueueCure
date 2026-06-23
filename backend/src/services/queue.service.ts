@@ -1,4 +1,5 @@
 import Patient from "../models/Patient.js";
+import { io } from "../server.js";
 
 export const callNextPatientService = async () => {
   const existingCalled = await Patient.findOne({
@@ -22,6 +23,8 @@ export const callNextPatientService = async () => {
   patient.status = "called";
 
   await patient.save();
+
+  io.emit("queue-updated");
 
   return patient;
 };

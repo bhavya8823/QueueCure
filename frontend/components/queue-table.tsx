@@ -95,7 +95,7 @@ export function QueueTable({
       </div>
 
       <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
-        <div className="max-h-[355px] overflow-y-auto overflow-x-auto">
+        <div className="max-h-[565px] overflow-y-auto overflow-x-auto">
           <table className="w-full">
             <thead className="sticky top-0 z-20 border-b border-border bg-secondary">
               <tr>

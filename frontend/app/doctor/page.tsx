@@ -6,6 +6,10 @@ import { NextQueue } from '@/components/doctor/next-queue'
 import { useCurrentPatient } from "@/hooks/useCurrentPatient";
 import { useWaitingPatients } from "@/hooks/useWaitingPatients";
 import { useCompletePatient } from "@/hooks/useCompletePatient";
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { socket } from "@/lib/socket";
+import { useSocketQueue } from "@/hooks/useSocketQueue";
 
 interface Patient {
   id: string
@@ -18,13 +22,31 @@ interface Patient {
 }
 
 export default function DoctorPage() {
+  useSocketQueue();
   
+  const queryClient = useQueryClient();
 
   const { data: currentPatient } = useCurrentPatient();
 
   const { data: upcomingPatients = [] } = useWaitingPatients();
 
   const completeMutation = useCompletePatient();
+
+  useEffect(() => {
+    socket.on("queue-updated", () => {
+      queryClient.invalidateQueries({
+        queryKey: ["current-patient"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["waiting-patients"],
+      });
+    });
+
+    return () => {
+      socket.off("queue-updated");
+    };
+  }, [queryClient]);
 
   if (!currentPatient) {
     return (

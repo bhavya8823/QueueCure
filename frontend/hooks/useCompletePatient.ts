@@ -2,6 +2,8 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { completePatient } from "@/services/patient.service";
+import { toast } from "sonner";
+
 
 export const useCompletePatient = () => {
   const queryClient = useQueryClient();
@@ -10,6 +12,8 @@ export const useCompletePatient = () => {
     mutationFn: completePatient,
 
     onSuccess: () => {
+        toast.success("Consultation completed");
+        
       queryClient.invalidateQueries({
         queryKey: ["patients"],
       });

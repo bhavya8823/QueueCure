@@ -3,32 +3,92 @@
 import { NowServingCard } from '@/components/waiting-room/now-serving-card'
 import { UpcomingQueue } from '@/components/waiting-room/upcoming-queue'
 import { AnnouncementTicker } from '@/components/waiting-room/announcement-ticker'
-import { useState } from 'react'
-
-interface Patient {
-  token: string
-  name: string
-}
+import { useCurrentPatient } from "@/hooks/useCurrentPatient";
+import { useWaitingPatients } from "@/hooks/useWaitingPatients";
+import { useSettings } from "@/hooks/useSettings";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { socket } from "@/lib/socket";
+import { useSocketQueue } from "@/hooks/useSocketQueue";
 
 export default function WaitingRoomPage() {
-  const [currentPatient] = useState<Patient>({
-    token: 'A001',
-    name: 'John Smith',
-  })
+  const [time, setTime] = useState(new Date());
 
-  const [upcomingPatients] = useState<Patient[]>([
-    { token: 'A002', name: 'Sarah Johnson' },
-    { token: 'A003', name: 'Michael Davis' },
-    { token: 'A004', name: 'Emily Brown' },
-    { token: 'A005', name: 'Robert Wilson' },
-    { token: 'A006', name: 'Lisa Anderson' },
-  ])
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  const queryClient = useQueryClient();
+
+  useSocketQueue();
+
+  const { data: currentPatient } = useCurrentPatient();
+
+  const { data: upcomingPatients = [] } = useWaitingPatients();
+
+  const { data: settings } = useSettings();
+
+  const avgTime = settings?.avgConsultationTime ?? 15;
+
+  const estimatedWait = upcomingPatients.length * avgTime;
 
   const announcements = [
     'Please check in at the reception desk 10 minutes before your appointment',
     'Masks are optional but recommended in medical areas',
     'Thank you for choosing our clinic - Your health is our priority',
   ]
+
+  const getRoom = (type: string) => {
+    switch (type) {
+      case "general":
+        return "Room 1";
+
+      case "dental":
+        return "Room 2";
+
+      case "cardiology":
+        return "Room 3";
+
+      case "orthopedic":
+        return "Room 4";
+
+      default:
+        return "Room 1";
+    }
+  };
+
+  if (!currentPatient) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="border-b border-border bg-white shadow-sm">
+          <div className="mx-auto max-w-7xl px-4 py-4">
+            <h1 className="text-2xl font-bold">QueueCure Clinic</h1>
+          </div>
+        </div>
+
+        <main className="mx-auto max-w-7xl px-4 py-8">
+          <div className="grid gap-8 lg:grid-cols-4">
+            <div className="rounded-xl border bg-white p-12 text-center">
+              <h2 className="text-5xl font-bold text-muted-foreground">
+                No Patient Being Served
+              </h2>
+
+              <p className="mt-4 text-lg text-muted-foreground">
+                Waiting for next patient
+              </p>
+            </div>
+
+            <div>
+              <UpcomingQueue patients={upcomingPatients} />
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -37,14 +97,18 @@ export default function WaitingRoomPage() {
         <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">QueueCure Clinic</h1>
-              <p className="text-sm text-muted-foreground">Patient Waiting Area</p>
+              <h1 className="text-2xl font-bold text-foreground">
+                QueueCure Clinic
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Patient Waiting Area
+              </p>
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-primary">
-                {new Date().toLocaleTimeString('en-US', {
-                  hour: '2-digit',
-                  minute: '2-digit',
+                {time.toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
                   hour12: true,
                 })}
               </p>
@@ -61,11 +125,38 @@ export default function WaitingRoomPage() {
             <NowServingCard
               token={currentPatient.token}
               patientName={currentPatient.name}
-              room="Room 3"
+              room={getRoom(currentPatient.consultationType)}
             />
 
+            <div className="grid grid-cols-3 gap-4">
+              <div className="rounded-xl border bg-white p-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  Waiting Patients
+                </p>
 
-            <AnnouncementTicker announcements={announcements} />
+                <p className="mt-2 text-4xl font-bold text-primary">
+                  {upcomingPatients.length}
+                </p>
+              </div>
+
+              <div className="rounded-xl border bg-white p-6 text-center">
+                <p className="text-sm text-muted-foreground">
+                  Avg Consultation
+                </p>
+
+                <p className="mt-2 text-4xl font-bold text-primary">
+                  {avgTime} min
+                </p>
+              </div>
+
+              <div className="rounded-xl border bg-white p-6 text-center">
+                <p className="text-sm text-muted-foreground">Estimated Wait</p>
+
+                <p className="mt-2 text-4xl font-bold text-primary">
+                  {estimatedWait} min
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Right - Upcoming Queue (30%) */}
@@ -75,5 +166,5 @@ export default function WaitingRoomPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }

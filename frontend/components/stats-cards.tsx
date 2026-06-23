@@ -38,7 +38,7 @@ export function StatsCards({ waiting, called, completed }: StatsCardsProps) {
       textColor: 'text-green-500',
       iconBg: 'bg-green-100',
       iconColor: 'text-green-600',
-      trend: 'Today',
+      trend: 'Lifetime',
     },
   ]
 

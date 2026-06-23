@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { toast } from "sonner";
+
 
 interface RegistrationFormProps {
   onSubmit: (formData: {
@@ -14,11 +16,11 @@ interface RegistrationFormProps {
 
 export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
   const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    age: '',
-    consultationType: 'General Checkup',
-  })
+    fullName: "",
+    phone: "",
+    age: "",
+    consultationType: "General",
+  });
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -40,12 +42,13 @@ export function RegistrationForm({ onSubmit }: RegistrationFormProps) {
     setIsLoading(true)
     setTimeout(() => {
       onSubmit(formData)
+      toast.success("Patient registered successfully");
       setFormData({
-        fullName: '',
-        phone: '',
-        age: '',
-        consultationType: 'General Checkup',
-      })
+        fullName: "",
+        phone: "",
+        age: "",
+        consultationType: "General",
+      });
       setIsLoading(false)
     }, 300)
   }

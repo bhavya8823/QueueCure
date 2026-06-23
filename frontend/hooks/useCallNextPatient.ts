@@ -2,6 +2,8 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { callNextPatient } from "@/services/queue.service";
+import { toast } from "sonner";
+
 
 export const useCallNextPatient = () => {
   const queryClient = useQueryClient();
@@ -10,6 +12,8 @@ export const useCallNextPatient = () => {
     mutationFn: callNextPatient,
 
     onSuccess: () => {
+        toast.success("Patient called successfully");
+
       queryClient.invalidateQueries({
         queryKey: ["patients"],
       });

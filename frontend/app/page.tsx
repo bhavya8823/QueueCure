@@ -11,9 +11,16 @@ import { useCallPatient } from "@/hooks/useCallPatient";
 import { useCompletePatient } from "@/hooks/useCompletePatient";
 import { useCreatePatient } from "@/hooks/useCreatePatient";
 import { useCallNextPatient } from "@/hooks/useCallNextPatient";
+import { SettingsCard } from "@/components/settings-card";
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { socket } from "@/lib/socket";
+import { useSocketQueue } from "@/hooks/useSocketQueue";
+
 
 
 export default function Home() {
+  useSocketQueue();
   const { data: patients = [] } = usePatients();
   console.log("Patients:", patients);
 
@@ -38,47 +45,19 @@ export default function Home() {
     callNextPatientMutation.mutate();
   };
 
-  // const handleRegisterPatient = (formData: {
-  //   fullName: string
-  //   phone: string
-  //   age: string
-  //   consultationType: string
-  // }) => {
-  //   const newPatient: Patient = {
-  //     id: String(patients.length + 1),
-  //     token: `A${String(patients.length + 1).padStart(3, '0')}`,
-  //     name: formData.fullName,
-  //     phone: formData.phone,
-  //     age: parseInt(formData.age),
-  //     consultationType: formData.consultationType,
-  //     status: 'waiting',
-  //   }
-  //   setPatients([...patients, newPatient])
-  // }
+  const queryClient = useQueryClient();
 
-  // const handleCallPatient = (id: string) => {
-  //   setPatients(
-  //     patients.map((p) =>
-  //       p._id === id ? { ...p, status: 'called' as const } : p
-  //     )
-  //   )
-  // }
+  useEffect(() => {
+    socket.on("queue-updated", () => {
+      queryClient.invalidateQueries();
+    });
 
-  // const handleCompletePatient = (id: string) => {
-  //   setPatients(
-  //     patients.map((p) =>
-  //       p._id === id ? { ...p, status: 'completed' as const } : p
-  //     )
-  //   )
-  // }
+    return () => {
+      socket.off("queue-updated");
+    };
+  }, [queryClient]);
 
-  // const handleCallNextPatient = () => {
-  //   const nextWaiting = patients.find((p) => p.status === 'waiting')
-  //   if (nextWaiting) {
-  //     handleCallPatient(nextWaiting._id)
-  //   }
-  // }
-
+  
   const { data: statsData } = useQueueStats();
   console.log("Stats Data:", statsData);
   const waitingCount = statsData?.waiting ?? 0;
@@ -96,9 +75,12 @@ export default function Home() {
         />
 
         <div className="mt-8 grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
             <RegistrationForm onSubmit={handleRegisterPatient} />
+
+            <SettingsCard />
           </div>
+
           <div className="lg:col-span-2">
             <QueueTable
               patients={patients}
@@ -116,5 +98,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-  )
+  );
 }
