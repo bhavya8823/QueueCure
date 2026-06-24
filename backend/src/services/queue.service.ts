@@ -24,6 +24,8 @@ export const callNextPatientService = async () => {
 
   await patient.save();
 
+  console.log("QUEUE UPDATED EMITTED");
+
   io.emit("queue-updated");
 
   return patient;

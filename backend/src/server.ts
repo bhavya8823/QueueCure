@@ -13,17 +13,34 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+    ],
     methods: ["GET", "POST", "PATCH"],
+    credentials: true,
   },
 });
 
-const startServer = async () => {
-  await connectDB();
+io.on("connection", (socket) => {
+  console.log("Client Connected:", socket.id);
 
-  server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  socket.on("disconnect", () => {
+    console.log("Client Disconnected:", socket.id);
   });
+});
+
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server startup failed:", error);
+    process.exit(1);
+  }
 };
 
 startServer();
