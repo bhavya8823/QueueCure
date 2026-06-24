@@ -44,19 +44,6 @@ export default function Home() {
   const handleCallNextPatient = async () => {
     callNextPatientMutation.mutate();
   };
-
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    socket.on("queue-updated", () => {
-      queryClient.invalidateQueries();
-    });
-
-    return () => {
-      socket.off("queue-updated");
-    };
-  }, [queryClient]);
-
   
   const { data: statsData } = useQueueStats();
   console.log("Stats Data:", statsData);

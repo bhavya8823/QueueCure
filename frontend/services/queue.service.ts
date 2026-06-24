@@ -1,7 +1,11 @@
 import { api } from "@/lib/api";
 
 export const getQueueStats = async (): Promise<QueueStats> => {
+  console.log("Fetching queue stats...");
+
   const response = await api.get("/queue/stats");
+
+  console.log("Queue Stats Response:", response.data);
 
   return response.data.data;
 };

@@ -71,17 +71,23 @@ export default function WaitingRoomPage() {
 
         <main className="mx-auto max-w-7xl px-4 py-8">
           <div className="grid gap-8 lg:grid-cols-4">
-            <div className="rounded-xl border bg-white p-12 text-center">
-              <h2 className="text-5xl font-bold text-muted-foreground">
-                No Patient Being Served
-              </h2>
+            {/* Left side */}
+            <div className="lg:col-span-3">
+              <div className="rounded-xl border bg-white min-h-[600px] flex flex-col items-center justify-center text-center">
+                <h2 className="text-6xl font-bold text-muted-foreground">
+                  No Patient
+                  <br />
+                  Being Served
+                </h2>
 
-              <p className="mt-4 text-lg text-muted-foreground">
-                Waiting for next patient
-              </p>
+                <p className="mt-6 text-xl text-muted-foreground">
+                  Waiting for next patient
+                </p>
+              </div>
             </div>
 
-            <div>
+            {/* Right side */}
+            <div className="lg:col-span-1">
               <UpcomingQueue patients={upcomingPatients} />
             </div>
           </div>
